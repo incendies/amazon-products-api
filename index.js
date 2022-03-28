@@ -1,13 +1,15 @@
 const express = require('express');
 const request = require('request-promise');
+require('dotenv').config();
+
+const apiKey = process.env.API_KEY;
 
 const PORT = process.env.PORT || 5000;
 const app = express();
 
 app.use(express.json());
 
-// const apiKey ='67c40f2bca49534b60dc07c91176fa11';
-const generateScraperUrl = (apiKey) => `http://api.scraperapi.com?api_key=67c40f2bca49534b60dc07c91176fa11&autoparse=true`;
+const generateScraperUrl = () => `http://api.scraperapi.com?api_key=${apiKey}&autoparse=true`;
 
 // Welcome route
 app.get('/', async (req, res) => {
@@ -20,7 +22,7 @@ app.get('/products/:productId', async (req, res) => {
     const { api_key } = req.query;
 
     try {                                                                 
-        const response = await request(`${generateScraperUrl(api_key)}&url=https://www.amazon.com/dp/${productId}`);
+        const response = await request(`${generateScraperUrl()}&url=https://www.amazon.com/dp/${productId}`);
         
         res.json(JSON.parse(response));
     } catch (error) {
